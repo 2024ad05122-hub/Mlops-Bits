@@ -1,0 +1,84 @@
+name: CI-CD
+
+# Runs on every push / PR to main. The pipeline FAILS if lint or tests fail
+# (assignment task 5 requirement: "pipeline must fail on code or test errors").
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-test-train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint (flake8)
+        run: |
+          # fail the build on real errors; treat style issues as warnings
+          flake8 src app tests --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 src app tests --count --max-line-length=100 --exit-zero --statistics
+
+      - name: Download dataset
+        run: python scripts/download_data.py
+
+      - name: Run unit tests
+        run: pytest -v --maxfail=1
+
+      - name: Train model (produces artifacts)
+        run: python -m src.train
+
+      - name: Upload model artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-artifacts
+          path: |
+            models/model.joblib
+            models/model_metadata.json
+            reports/figures/
+          retention-days: 14
+
+  docker-build:
+    needs: lint-test-train
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install + train (model needed inside image)
+        run: |
+          pip install -r requirements.txt
+          python scripts/download_data.py
+          python -m src.train
+
+      - name: Build Docker image
+        run: docker build -t heart-disease-api:${{ github.sha }} .
+
+      - name: Smoke-test the container
+        run: |
+          docker run -d --name api -p 8000:8000 heart-disease-api:${{ github.sha }}
+          sleep 8
+          curl -fsS http://localhost:8000/health
+          curl -fsS -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{"age":63,"sex":1,"cp":3,"trestbps":145,"chol":233,"fbs":1,"restecg":0,"thalach":150,"exang":0,"oldpeak":2.3,"slope":0,"ca":0,"thal":1}'
+          docker rm -f api

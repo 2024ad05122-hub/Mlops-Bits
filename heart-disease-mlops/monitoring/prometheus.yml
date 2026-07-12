@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Scrape the model API directly (local docker-compose / host networking).
+  - job_name: "heart-disease-api"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["heart-disease-api:8000"]  # docker-compose service name
+        labels:
+          service: heart-disease-api
+
+  # Prometheus scraping itself (useful sanity check).
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]

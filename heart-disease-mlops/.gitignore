@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Testing / linting
+.pytest_cache/
+.mypy_cache/
+
+# MLflow
+mlruns/
+mlflow.db
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Keep the trained model + dataset tracked? Your call.
+# By default we ignore large artifacts; the CI re-creates them.
+# Comment these out if you want to commit them for the grader.
+# models/*.joblib
+# data/*.csv

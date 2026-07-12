@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: heart-disease-api
+  labels:
+    app: heart-disease-api
+spec:
+  # LoadBalancer for cloud (GKE/EKS/AKS). For Minikube use `minikube service`
+  # or change type to NodePort.
+  type: LoadBalancer
+  selector:
+    app: heart-disease-api
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8000

@@ -1,0 +1,25 @@
+# Core ML / data
+scikit-learn==1.8.0
+pandas==2.3.3
+numpy==2.4.4
+joblib==1.5.3
+
+# EDA / visualisation
+matplotlib==3.10.8
+seaborn==0.13.2
+
+# Experiment tracking
+mlflow==3.14.0
+
+# API serving
+flask==3.1.3
+gunicorn==26.0.0
+prometheus-client==0.25.0
+
+# Dataset download (official UCI package)
+ucimlrepo==0.0.7
+
+# Testing + linting (CI)
+pytest==9.1.1
+flake8==7.3.0
+requests==2.33.1

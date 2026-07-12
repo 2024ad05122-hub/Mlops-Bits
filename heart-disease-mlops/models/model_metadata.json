@@ -1,0 +1,47 @@
+{
+  "best_model": "random_forest",
+  "metrics": {
+    "accuracy": 0.8032786885245902,
+    "precision": 0.7692307692307693,
+    "recall": 0.9090909090909091,
+    "f1": 0.8333333333333334,
+    "roc_auc": 0.9188311688311689,
+    "cv_roc_auc_mean": 0.9210696710696711,
+    "cv_roc_auc_std": 0.04750579474599716
+  },
+  "features": [
+    "age",
+    "trestbps",
+    "chol",
+    "thalach",
+    "oldpeak",
+    "sex",
+    "cp",
+    "fbs",
+    "restecg",
+    "exang",
+    "slope",
+    "ca",
+    "thal"
+  ],
+  "numeric_features": [
+    "age",
+    "trestbps",
+    "chol",
+    "thalach",
+    "oldpeak"
+  ],
+  "categorical_features": [
+    "sex",
+    "cp",
+    "fbs",
+    "restecg",
+    "exang",
+    "slope",
+    "ca",
+    "thal"
+  ],
+  "sklearn_version": "1.8.0",
+  "python_version": "3.12.3",
+  "trained_at_utc": "2026-07-11T00:25:24.596165+00:00"
+}
